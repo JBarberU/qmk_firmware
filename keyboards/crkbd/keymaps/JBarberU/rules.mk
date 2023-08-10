@@ -7,6 +7,7 @@ BOOTLOADER = caterina
 # Size optimisations
 AUDIO_ENABLE = no           # Audio output on port C6
 AUTO_BUTTONS = no
+BOOTMAGIC_ENABLE = no
 COMMAND_ENABLE = no         # Commands for debug and configuration
 CONSOLE_ENABLE = no         # Console for debug
 GRAVE_ESCAPE_ENABLE = no
