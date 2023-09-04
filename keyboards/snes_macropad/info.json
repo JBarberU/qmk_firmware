@@ -11,11 +11,10 @@
         "extrakey": true,
         "mousekey": true,
         "nkro": true,
-        "oled": true,
-        "rgb_matrix": true
+        "oled": true
     },
     "ws2812": {
-        "pin": "GP25",
+        "pin": "GP23",
         "driver": "vendor"
     },
     "matrix_pins": {
@@ -46,11 +45,5 @@
                 {"matrix": [2, 3], "x": 3, "y": 2}
             ]
         }
-    },
-    "rgb_matrix": {
-        "driver": "WS2812",
-        "layout": [
-            {"matrix": [0, 0], "x": 0, "y": 7, "flags": 1}
-        ]
     }
 }

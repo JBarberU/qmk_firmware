@@ -16,9 +16,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * └───┴───┴───┴───┘
      */
     [0] = LAYOUT_ortho_4x4(
-        KC_P7,   KC_P8,   KC_P9,   KC_PSLS,
-        KC_P4,   QK_BOOT,   KC_P6,   KC_PAST,
-        KC_P1,   KC_P2,   KC_P3,   KC_PMNS
+        KC_NO,   KC_NO,   KC_NO,   KC_NO,
+        KC_NO,   KC_P5,   KC_NO,   KC_NO,
+        LT(1, KC_1),   LT(2, KC_P2),   LT(3, KC_P3),   KC_NO
+    ),
+    [1] = LAYOUT_ortho_4x4(
+        KC_NO,   KC_NO,     KC_NO,   KC_NO,
+        KC_NO,   QK_BOOT,   KC_NO,   KC_NO,
+        KC_TRNS,   QK_RBT,   KC_BSPC,   KC_NO
+    ),
+    [2] = LAYOUT_ortho_4x4(
+        KC_NO,   KC_NO,     KC_NO,   KC_NO,
+        KC_NO,   RGB_M_B,     KC_NO,   KC_NO,
+        RGB_TOG,   KC_TRNS,   RGB_M_P,   KC_NO
+    ),
+    [3] = LAYOUT_ortho_4x4(
+        KC_NO,   KC_P8,     KC_NO,   KC_NO,
+        KC_NO,   RGB_HUD,   KC_NO,   KC_NO,
+        RGB_HUI,   KC_NO,   KC_TRNS,   KC_NO
     )
 };
 
@@ -59,11 +74,13 @@ void test_oled(void)
 
 bool oled_task_user(void)
 {
-    static bool needs_update = true;
-    if (needs_update)
-    {
-        print_layer();
-        needs_update = false;
-    }
+    print_layer();
     return false;
+}
+
+void keyboard_post_init_user(void) {
+    rgblight_enable_noeeprom();
+    rgblight_sethsv_noeeprom(HSV_MAGENTA);
+    /*rgblight_mode_noeeprom(RGBLIGHT_MODE_BREATHING + 3);*/
+    rgblight_mode_noeeprom(RGBLIGHT_MODE_RAINBOW_SWIRL);
 }
