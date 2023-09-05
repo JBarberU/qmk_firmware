@@ -3,6 +3,15 @@
 
 #include QMK_KEYBOARD_H
 
+enum Layer
+{
+    L_Default = 0,
+    L_Lower,
+    L_Raise,
+    L_Adjust
+};
+
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /*
      * Macropad Button Order
@@ -24,26 +33,26 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * └────────┴────────┴────────┴────────┘
      *
      */
-    [0] = LAYOUT(
+    [L_Default] = LAYOUT(
           /*LT(1, KC_1), LT(2, KC_P2), LT(3, KC_P3), KC_NO*/
-          KC_P7,       KC_P8,        KC_P9,        KC_PMNS
-        , KC_P4,       KC_P5,        LT(1, KC_P6), KC_PPLS
-        , KC_P1,       KC_P2,        KC_P3,        KC_P0
+          KC_7,       KC_8,        KC_9,        KC_MINS
+        , KC_4,       KC_5,        LT(1, KC_6), KC_EQL
+        , KC_1,       KC_2,        KC_3,        KC_0
 
         , KC_A,    KC_B,    KC_C,    KC_D
-        , KC_E,    KC_F,    KC_G,    KC_H
+        , KC_E,    LT(1, KC_F),    KC_G,    KC_H
         , KC_I,    KC_J,    KC_K,    KC_L
     ),
-    [1] = LAYOUT(
+    [L_Lower] = LAYOUT(
           KC_NO,   KC_NO,   KC_NO,   KC_NO
         , KC_NO,   QK_RBT,  KC_TRNS, QK_BOOT
         , KC_NO,   KC_NO,   KC_NO,   KC_NO
 
         , KC_A,    KC_B,    KC_C,    KC_D
-        , KC_E,    KC_F,    KC_G,    KC_H
+        , QK_BOOT,    KC_TRNS,    KC_G,    KC_H
         , KC_I,    KC_J,    KC_K,    KC_L
     ),
-    [2] = LAYOUT(
+    [L_Raise] = LAYOUT(
           KC_NO,   KC_NO,   KC_NO,   KC_NO
         , KC_NO,   RGB_M_B, KC_NO,   KC_NO
         , RGB_TOG, KC_TRNS, RGB_M_P, KC_NO
@@ -52,7 +61,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         , KC_E,    KC_F,    KC_G,    KC_H
         , KC_I,    KC_J,    KC_K,    KC_L
     ),
-    [3] = LAYOUT(
+    [L_Adjust] = LAYOUT(
           KC_NO,   KC_P8,   KC_NO,   KC_NO
         , KC_NO,   RGB_HUD, KC_NO,   KC_NO
         , RGB_HUI, KC_NO,   KC_TRNS, KC_NO
@@ -71,16 +80,16 @@ void print_layer(void)
 {
     oled_write_P(PSTR("Layer: "), false);
     switch (get_highest_layer(layer_state)) {
-        case 0:
+        case L_Default:
             oled_write_ln_P(PSTR("Default"), false);
             break;
-        case 1:
+        case L_Lower:
             oled_write_ln_P(PSTR("Lower"), false);
             break;
-        case 2:
+        case L_Raise:
             oled_write_ln_P(PSTR("Raise"), false);
             break;
-        case 3:
+        case L_Adjust:
             oled_write_ln_P(PSTR("Adjust"), false);
             break;
         default:
