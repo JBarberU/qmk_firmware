@@ -15,25 +15,42 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * │ 0 │ . │Ent│ + │
      * └───┴───┴───┴───┘
      */
-    [0] = LAYOUT_ortho_4x4(
-        KC_NO,   KC_NO,   KC_NO,   KC_NO,
-        KC_NO,   KC_P5,   KC_NO,   KC_NO,
-        LT(1, KC_1),   LT(2, KC_P2),   LT(3, KC_P3),   KC_NO
+    [0] = LAYOUT(
+          /*LT(1, KC_1), LT(2, KC_P2), LT(3, KC_P3), KC_NO*/
+          KC_NO,       KC_NO,        KC_NO,        KC_NO
+        , KC_P0,       KC_P1,        KC_P2,        KC_P3
+        , KC_NO,       KC_NO,        KC_NO,        KC_NO
+
+        , KC_A,    KC_B,    KC_C,    KC_D
+        , KC_E,    KC_F,    KC_G,    KC_H
+        , KC_I,    KC_J,    KC_K,    KC_L
     ),
-    [1] = LAYOUT_ortho_4x4(
-        KC_NO,   KC_NO,     KC_NO,   KC_NO,
-        KC_NO,   QK_BOOT,   KC_NO,   KC_NO,
-        KC_TRNS,   QK_RBT,   KC_BSPC,   KC_NO
+    [1] = LAYOUT(
+          KC_NO,   KC_NO,     KC_NO,   KC_NO
+        , KC_NO,   QK_BOOT,   KC_NO,   KC_NO
+        , KC_TRNS,   QK_RBT,   KC_BSPC,   KC_NO
+
+        , KC_A,    KC_B,    KC_C,    KC_D
+        , KC_E,    KC_F,    KC_G,    KC_H
+        , KC_I,    KC_J,    KC_K,    KC_L
     ),
-    [2] = LAYOUT_ortho_4x4(
-        KC_NO,   KC_NO,     KC_NO,   KC_NO,
-        KC_NO,   RGB_M_B,     KC_NO,   KC_NO,
-        RGB_TOG,   KC_TRNS,   RGB_M_P,   KC_NO
+    [2] = LAYOUT(
+          KC_NO,   KC_NO,     KC_NO,   KC_NO
+        , KC_NO,   RGB_M_B,     KC_NO,   KC_NO
+        , RGB_TOG,   KC_TRNS,   RGB_M_P,   KC_NO
+
+        , KC_A,    KC_B,    KC_C,    KC_D
+        , KC_E,    KC_F,    KC_G,    KC_H
+        , KC_I,    KC_J,    KC_K,    KC_L
     ),
-    [3] = LAYOUT_ortho_4x4(
-        KC_NO,   KC_P8,     KC_NO,   KC_NO,
-        KC_NO,   RGB_HUD,   KC_NO,   KC_NO,
-        RGB_HUI,   KC_NO,   KC_TRNS,   KC_NO
+    [3] = LAYOUT(
+          KC_NO,   KC_P8,     KC_NO,   KC_NO
+        , KC_NO,   RGB_HUD,   KC_NO,   KC_NO
+        , RGB_HUI,   KC_NO,   KC_TRNS,   KC_NO
+
+        , KC_A,    KC_B,    KC_C,    KC_D
+        , KC_E,    KC_F,    KC_G,    KC_H
+        , KC_I,    KC_J,    KC_K,    KC_L
     )
 };
 
@@ -79,6 +96,8 @@ bool oled_task_user(void)
 }
 
 void keyboard_post_init_user(void) {
+    debug_enable = true;
+    debug_matrix = true;
     rgblight_enable_noeeprom();
     rgblight_sethsv_noeeprom(HSV_MAGENTA);
     /*rgblight_mode_noeeprom(RGBLIGHT_MODE_BREATHING + 3);*/
