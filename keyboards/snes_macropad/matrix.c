@@ -32,7 +32,7 @@
 #define SNES_DATA_SETUP_DELAY_US 10
 #define SNES_CLOCK_PULSE_DURATION 10
 
-inline int get_pin(size_t row)
+static inline int get_pin(size_t row)
 {
     switch (row)
     {
@@ -43,7 +43,7 @@ inline int get_pin(size_t row)
     }
 }
 
-void deselect_all_rows(void)
+static void deselect_all_rows(void)
 {
     setPinOutput(KBD_ROW0);
     writePinHigh(KBD_ROW0);
@@ -55,7 +55,7 @@ void deselect_all_rows(void)
     writePinHigh(KBD_ROW2);
 }
 
-void deselect_row(size_t row)
+static void deselect_row(size_t row)
 {
     const int pin = get_pin(row);
     if (pin >= 0)
@@ -65,7 +65,7 @@ void deselect_row(size_t row)
     }
 }
 
-void select_row(size_t row)
+static void select_row(size_t row)
 {
     const int pin = get_pin(row);
     if (pin >= 0)
@@ -75,7 +75,7 @@ void select_row(size_t row)
     }
 }
 
-void init_cols(void)
+static void init_cols(void)
 {
     setPinInputHigh(KBD_COL0);
     setPinInputHigh(KBD_COL1);
@@ -99,7 +99,7 @@ void matrix_init_custom(void)
     writePinLow(SNES_LATCH);
 }
 
-matrix_row_t read_row(size_t row)
+static matrix_row_t read_row(size_t row)
 {
     select_row(row);
     wait_us(KBD_ROW_SETUP_DELAY_US);
@@ -112,7 +112,7 @@ matrix_row_t read_row(size_t row)
     return ret;
 }
 
-uint16_t readShiftRegister(void)
+static uint16_t readShiftRegister(void)
 {
     uint16_t ret = 0;
 
@@ -139,7 +139,7 @@ uint16_t readShiftRegister(void)
     return ret;
 }
 
-void readKeyboard(matrix_row_t current_matrix[])
+static void readKeyboard(matrix_row_t current_matrix[])
 {
     for (size_t row = 0; row < 2; ++row)
     {
@@ -147,7 +147,7 @@ void readKeyboard(matrix_row_t current_matrix[])
     }
 }
 
-void readSnesController(matrix_row_t current_matrix[])
+static void readSnesController(matrix_row_t current_matrix[])
 {
   const uint16_t controller = ~readShiftRegister();
   current_matrix[3] = 0b1111 & (controller >> (0 * MATRIX_COLS));
