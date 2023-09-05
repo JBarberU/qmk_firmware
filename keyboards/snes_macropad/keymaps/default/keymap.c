@@ -5,48 +5,57 @@
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /*
+     * Macropad Button Order
      * ┌───┬───┬───┬───┐
-     * │ 7 │ 8 │ 9 │ / │
+     * │ 7 │ 8 │ 9 │ - │
      * ├───┼───┼───┼───┤
-     * │ 4 │ 5 │ 6 │ * │
+     * │ 4 │ 5 │ 6 │ + │
      * ├───┼───┼───┼───┤
-     * │ 1 │ 2 │ 3 │ - │
-     * ├───┼───┼───┼───┤
-     * │ 0 │ . │Ent│ + │
+     * │ 1 │ 2 │ 3 │ 0 │
      * └───┴───┴───┴───┘
+     *
+     * SNES Button Order
+     * ┌────────┬────────┬────────┬────────┐
+     * │   LT   │   RT   │ START  │ SELECT │
+     * ├────────┼────────┼────────┼────────┤
+     * │   UP   │  DOWN  │  LEFT  │ RIGHT  │
+     * ├────────┼────────┼────────┼────────┤
+     * │   A    │   B    │   X    │   Y    │
+     * └────────┴────────┴────────┴────────┘
+     *
      */
     [0] = LAYOUT(
           /*LT(1, KC_1), LT(2, KC_P2), LT(3, KC_P3), KC_NO*/
-          KC_NO,       KC_NO,        KC_NO,        KC_NO
-        , KC_P0,       KC_P1,        KC_P2,        KC_P3
-        , KC_NO,       KC_NO,        KC_NO,        KC_NO
+          KC_P7,       KC_P8,        KC_P9,        KC_PMNS
+        , KC_P4,       KC_P5,        LT(1, KC_P6), KC_PPLS
+        , KC_P1,       KC_P2,        KC_P3,        KC_P0
 
         , KC_A,    KC_B,    KC_C,    KC_D
         , KC_E,    KC_F,    KC_G,    KC_H
         , KC_I,    KC_J,    KC_K,    KC_L
     ),
     [1] = LAYOUT(
-          KC_NO,   KC_NO,     KC_NO,   KC_NO
-        , KC_NO,   QK_BOOT,   KC_NO,   KC_NO
-        , KC_TRNS,   QK_RBT,   KC_BSPC,   KC_NO
+          KC_NO,   KC_NO,   KC_NO,   KC_NO
+        , KC_NO,   QK_RBT,  KC_TRNS, QK_BOOT
+        , KC_NO,   KC_NO,   KC_NO,   KC_NO
 
         , KC_A,    KC_B,    KC_C,    KC_D
         , KC_E,    KC_F,    KC_G,    KC_H
         , KC_I,    KC_J,    KC_K,    KC_L
     ),
     [2] = LAYOUT(
-          KC_NO,   KC_NO,     KC_NO,   KC_NO
-        , KC_NO,   RGB_M_B,     KC_NO,   KC_NO
-        , RGB_TOG,   KC_TRNS,   RGB_M_P,   KC_NO
+          KC_NO,   KC_NO,   KC_NO,   KC_NO
+        , KC_NO,   RGB_M_B, KC_NO,   KC_NO
+        , RGB_TOG, KC_TRNS, RGB_M_P, KC_NO
 
         , KC_A,    KC_B,    KC_C,    KC_D
         , KC_E,    KC_F,    KC_G,    KC_H
         , KC_I,    KC_J,    KC_K,    KC_L
     ),
     [3] = LAYOUT(
-          KC_NO,   KC_P8,     KC_NO,   KC_NO
-        , KC_NO,   RGB_HUD,   KC_NO,   KC_NO
-        , RGB_HUI,   KC_NO,   KC_TRNS,   KC_NO
+          KC_NO,   KC_P8,   KC_NO,   KC_NO
+        , KC_NO,   RGB_HUD, KC_NO,   KC_NO
+        , RGB_HUI, KC_NO,   KC_TRNS, KC_NO
 
         , KC_A,    KC_B,    KC_C,    KC_D
         , KC_E,    KC_F,    KC_G,    KC_H
