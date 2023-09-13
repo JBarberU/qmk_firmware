@@ -11,15 +11,10 @@
 #define SNES_D1 GP3
 #define SNES_IO GP4
 
-#ifdef RP_PICO_LITE
 #define KBD_ROW0 GP24
 #define KBD_ROW1 GP23
 #define KBD_ROW2 GP22
-#else
-#define KBD_ROW0 GP8
-#define KBD_ROW1 GP22
-#define KBD_ROW2 GP9
-#endif
+#define KBD_NUM_ROWS 3
 
 #define KBD_COL0 GP18
 #define KBD_COL1 GP19
@@ -104,10 +99,10 @@ static matrix_row_t read_row(size_t row)
     select_row(row);
     wait_us(KBD_ROW_SETUP_DELAY_US);
     const matrix_row_t ret = 
-        (readPin(KBD_COL0) ? 0 : 1 << 3) |
-        (readPin(KBD_COL1) ? 0 : 1 << 2) |
-        (readPin(KBD_COL2) ? 0 : 1 << 1) |
-        (readPin(KBD_COL3) ? 0 : 1 << 0);
+        (readPin(KBD_COL0) ? 0 : 1 << 0) |
+        (readPin(KBD_COL1) ? 0 : 1 << 1) |
+        (readPin(KBD_COL2) ? 0 : 1 << 2) |
+        (readPin(KBD_COL3) ? 0 : 1 << 3);
     deselect_row(row);
     return ret;
 }
@@ -141,7 +136,7 @@ static uint16_t readShiftRegister(void)
 
 static void readKeyboard(matrix_row_t current_matrix[])
 {
-    for (size_t row = 0; row < 2; ++row)
+    for (size_t row = 0; row < KBD_NUM_ROWS; ++row)
     {
         current_matrix[row] = read_row(row);
     }

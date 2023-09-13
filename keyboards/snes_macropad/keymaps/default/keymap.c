@@ -36,7 +36,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [L_Default] = LAYOUT(
           /*LT(1, KC_1), LT(2, KC_P2), LT(3, KC_P3), KC_NO*/
           KC_7,       KC_8,        KC_9,        KC_MINS
-        , KC_4,       KC_5,        LT(1, KC_6), KC_EQL
+        , KC_4,       KC_5,        KC_6,        QK_BOOT
         , KC_1,       KC_2,        KC_3,        KC_0
 
         , KC_A,    KC_B,    KC_C,    KC_D

@@ -13,7 +13,7 @@
         "nkro": true
     },
     "ws2812": {
-        "pin": "GP23", // Change GP23 for GP5 for the real keyboard
+        "pin": "GP5",
         "driver": "vendor"
     },
     "matrix_pins": {
