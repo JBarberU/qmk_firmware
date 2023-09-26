@@ -179,6 +179,22 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
   if (record->event.pressed) {
     set_keylog(keycode, record);
   }
+  if (keycode == QK_BOOT)
+  {
+    oled_clear();
+    oled_write("                     ", false);
+    oled_write("  In flash mode...   ", false);
+    oled_write("                     ", false);
+    oled_write("                     ", false);
+
+    // QMK is clever about only rendering a certain number of chunks per frame,
+    // but since the device will go into flash mode right after this call,
+    // we want to override this behavior and force all the chunks to be sent to
+    // the display immediately.
+    const size_t numIterations = OLED_DISPLAY_WIDTH * OLED_DISPLAY_HEIGHT / OLED_UPDATE_PROCESS_LIMIT;
+    for (size_t num = 0; num < numIterations; ++num)
+      oled_render();
+  }
   return process_record_user(keycode, record);
 }
 
