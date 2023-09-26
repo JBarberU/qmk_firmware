@@ -5,9 +5,10 @@
 
 enum Layer
 {
-    L_Default = 0,
-    L_Lower,
-    L_Raise,
+    L_Numpad = 0,
+    L_Symbols,
+    L_EasyEDA,
+    L_RGB,
     L_Adjust
 };
 
@@ -33,28 +34,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * └────────┴────────┴────────┴────────┘
      *
      */
-    [L_Default] = LAYOUT(
+    [L_Numpad] = LAYOUT(
           /*LT(1, KC_1), LT(2, KC_P2), LT(3, KC_P3), KC_NO*/
-          KC_7,       KC_8,        KC_9,        KC_MINS
-        , KC_4,       KC_5,        KC_6,        QK_BOOT
-        , KC_1,       KC_2,        KC_3,        KC_0
+          KC_P7,   KC_P8,   KC_P9,   TO(L_EasyEDA)
+        , KC_P4,   KC_P5,   KC_P6,   LT(L_Symbols, KC_PCMM)
+        , KC_P1,   KC_P2,   KC_P3,   KC_P0
 
         , KC_A,    KC_B,    KC_C,    KC_D
         , KC_E,    LT(1, KC_F),    KC_G,    KC_H
         , KC_I,    KC_J,    KC_K,    KC_L
     ),
-    [L_Lower] = LAYOUT(
-          KC_NO,   KC_NO,   KC_NO,   KC_NO
-        , KC_NO,   QK_RBT,  KC_TRNS, QK_BOOT
-        , KC_NO,   KC_NO,   KC_NO,   KC_NO
+    [L_EasyEDA] = LAYOUT(
+          KC_COMM, KC_DOT,  KC_K,   TO(L_RGB)
+        , KC_LSFT, KC_M,    KC_N,    TO(L_Numpad)
+        , KC_LCTL, KC_SPC,  KC_DEL,  KC_BSPC
 
         , KC_A,    KC_B,    KC_C,    KC_D
         , QK_BOOT,    KC_TRNS,    KC_G,    KC_H
         , KC_I,    KC_J,    KC_K,    KC_L
     ),
-    [L_Raise] = LAYOUT(
-          KC_NO,   KC_NO,   KC_NO,   KC_NO
-        , KC_NO,   RGB_M_B, KC_NO,   KC_NO
+    [L_RGB] = LAYOUT(
+          KC_NO,   KC_NO,   KC_NO,   TO(L_Adjust)
+        , KC_NO,   RGB_M_B, KC_NO,   TO(L_Numpad)
         , RGB_TOG, KC_TRNS, RGB_M_P, KC_NO
 
         , KC_A,    KC_B,    KC_C,    KC_D
@@ -63,8 +64,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [L_Adjust] = LAYOUT(
           KC_NO,   KC_P8,   KC_NO,   KC_NO
-        , KC_NO,   RGB_HUD, KC_NO,   KC_NO
+        , KC_NO,   RGB_HUD, KC_NO,   TO(L_Numpad)
         , RGB_HUI, KC_NO,   KC_TRNS, KC_NO
+
+        , KC_A,    KC_B,    KC_C,    KC_D
+        , KC_E,    KC_F,    KC_G,    KC_H
+        , KC_I,    KC_J,    KC_K,    KC_L
+    ),
+    [L_Symbols] = LAYOUT(
+          KC_PPLS, KC_PMNS, KC_PEQL, KC_NO
+        , KC_PAST, KC_PSLS, KC_ENT,  KC_TRNS
+        , KC_NUM,  KC_NO,   KC_NO,   QK_BOOT
 
         , KC_A,    KC_B,    KC_C,    KC_D
         , KC_E,    KC_F,    KC_G,    KC_H
@@ -80,17 +90,20 @@ static void oled_render_layer(void)
 {
     oled_write_P(PSTR("Layer: "), false);
     switch (get_highest_layer(layer_state)) {
-        case L_Default:
-            oled_write_ln_P(PSTR("Default"), false);
+        case L_Numpad:
+            oled_write_ln_P(PSTR("Numpad"), false);
             break;
-        case L_Lower:
-            oled_write_ln_P(PSTR("Lower"), false);
+        case L_EasyEDA:
+            oled_write_ln_P(PSTR("EasyEDA"), false);
             break;
-        case L_Raise:
-            oled_write_ln_P(PSTR("Raise"), false);
+        case L_RGB:
+            oled_write_ln_P(PSTR("RGB Controls"), false);
             break;
         case L_Adjust:
             oled_write_ln_P(PSTR("Adjust"), false);
+            break;
+        case L_Symbols:
+            oled_write_ln_P(PSTR("Symbols"), false);
             break;
         default:
             oled_write_ln_P(PSTR("Undef"), false);
