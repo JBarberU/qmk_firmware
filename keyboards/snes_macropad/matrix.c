@@ -25,7 +25,7 @@
 #define KBD_ROW_SETUP_DELAY_US 1
 
 // The real snes will clock 16 bits out of the controller, but only really has 12 bits of data
-#define SNES_DATA_BITS 12
+#define SNES_DATA_BITS 16
 #define SNES_DATA_SETUP_DELAY_US 10
 #define SNES_CLOCK_PULSE_DURATION 10
 
@@ -144,12 +144,27 @@ static void readKeyboard(matrix_row_t current_matrix[])
   }
 }
 
+static matrix_row_t getBits(uint16_t value, size_t bit0, size_t bit1, size_t bit2, size_t bit3)
+{
+  matrix_row_t ret = 0;
+  ret |= (value & (1 << bit3)) >> bit3;
+  ret <<= 1;
+  ret |= (value & (1 << bit2)) >> bit2;
+  ret <<= 1;
+  ret |= (value & (1 << bit1)) >> bit1;
+  ret <<= 1;
+  ret |= (value & (1 << bit0)) >> bit0;
+  return ret;
+}
+
 static void readSnesController(matrix_row_t current_matrix[])
 {
-  const uint16_t controller = ~readShiftRegister();
-  current_matrix[3] = 0b1111 & (controller >> (0 * MATRIX_COLS));
-  current_matrix[4] = 0b1111 & (controller >> (1 * MATRIX_COLS));
-  current_matrix[5] = 0b1111 & (controller >> (2 * MATRIX_COLS));
+  const uint16_t controller = (~readShiftRegister()) >> 4;
+
+  // SNES button order is pretty random, and we'd like them to be a bit tidier
+  current_matrix[3] = getBits(controller, 1, 0, 8, 9);
+  current_matrix[4] = getBits(controller, 7, 6, 5, 4);
+  current_matrix[5] = getBits(controller, 3, 11, 2, 10);
 }
 
 bool matrix_scan_custom(matrix_row_t current_matrix[])

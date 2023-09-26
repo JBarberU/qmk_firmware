@@ -40,9 +40,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     , KC_P4,   KC_P5,   KC_P6,   LT(L_Symbols, KC_PCMM)
     , KC_P1,   KC_P2,   KC_P3,   KC_P0
 
-    , KC_A,    KC_B,    KC_C,    KC_D
-    , KC_E,    LT(1, KC_F),    KC_G,    KC_H
-    , KC_I,    KC_J,    KC_K,    KC_L
+    , KC_A,    KC_S,    KC_ENT,  KC_BSPC
+    , KC_UP,   KC_DOWN, KC_LEFT, KC_RIGHT
+    , KC_X,    KC_Z,    LSFT(KC_F1),KC_TAB
   ),
   [L_EasyEDA] = LAYOUT(
       KC_COMM, KC_DOT,  KC_K,   TO(L_RGB)
