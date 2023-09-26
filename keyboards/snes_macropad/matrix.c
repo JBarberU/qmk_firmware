@@ -1,3 +1,5 @@
+// vim: shiftwidth=2
+
 #include "matrix.h"
 #include "gpio.h"
 #include "wait.h"
@@ -29,117 +31,117 @@
 
 static inline int get_pin(size_t row)
 {
-    switch (row)
-    {
-        case 0: return KBD_ROW0;
-        case 1: return KBD_ROW1;
-        case 2: return KBD_ROW2;
-        default: return -1;
-    }
+  switch (row)
+  {
+    case 0: return KBD_ROW0;
+    case 1: return KBD_ROW1;
+    case 2: return KBD_ROW2;
+    default: return -1;
+  }
 }
 
 static void deselect_all_rows(void)
 {
-    setPinOutput(KBD_ROW0);
-    writePinHigh(KBD_ROW0);
+  setPinOutput(KBD_ROW0);
+  writePinHigh(KBD_ROW0);
 
-    setPinOutput(KBD_ROW1);
-    writePinHigh(KBD_ROW1);
+  setPinOutput(KBD_ROW1);
+  writePinHigh(KBD_ROW1);
 
-    setPinOutput(KBD_ROW2);
-    writePinHigh(KBD_ROW2);
+  setPinOutput(KBD_ROW2);
+  writePinHigh(KBD_ROW2);
 }
 
 static void deselect_row(size_t row)
 {
-    const int pin = get_pin(row);
-    if (pin >= 0)
-    {
-        setPinOutput(pin);
-        writePinHigh(pin);
-    }
+  const int pin = get_pin(row);
+  if (pin >= 0)
+  {
+    setPinOutput(pin);
+    writePinHigh(pin);
+  }
 }
 
 static void select_row(size_t row)
 {
-    const int pin = get_pin(row);
-    if (pin >= 0)
-    {
-        setPinOutput(pin);
-        writePinLow(pin);
-    }
+  const int pin = get_pin(row);
+  if (pin >= 0)
+  {
+    setPinOutput(pin);
+    writePinLow(pin);
+  }
 }
 
 static void init_cols(void)
 {
-    setPinInputHigh(KBD_COL0);
-    setPinInputHigh(KBD_COL1);
-    setPinInputHigh(KBD_COL2);
-    setPinInputHigh(KBD_COL3);
+  setPinInputHigh(KBD_COL0);
+  setPinInputHigh(KBD_COL1);
+  setPinInputHigh(KBD_COL2);
+  setPinInputHigh(KBD_COL3);
 }
 
 void matrix_init_custom(void)
 {
-    setPinInputHigh(SNES_D0);
-    // todo: look into protocol for other strange snes controllers that use D1 and IO
-    // setPinInputHigh(SNES_D1);
-    // setPinInputHigh(SNES_IO);
-    setPinOutput(SNES_CLOCK);
-    setPinOutput(SNES_LATCH);
+  setPinInputHigh(SNES_D0);
+  // todo: look into protocol for other strange snes controllers that use D1 and IO
+  // setPinInputHigh(SNES_D1);
+  // setPinInputHigh(SNES_IO);
+  setPinOutput(SNES_CLOCK);
+  setPinOutput(SNES_LATCH);
 
-    deselect_all_rows();
-    init_cols();
+  deselect_all_rows();
+  init_cols();
 
-    writePinLow(SNES_CLOCK);
-    writePinLow(SNES_LATCH);
+  writePinLow(SNES_CLOCK);
+  writePinLow(SNES_LATCH);
 }
 
 static matrix_row_t read_row(size_t row)
 {
-    select_row(row);
-    wait_us(KBD_ROW_SETUP_DELAY_US);
-    const matrix_row_t ret = 
-        (readPin(KBD_COL0) ? 0 : 1 << 0) |
-        (readPin(KBD_COL1) ? 0 : 1 << 1) |
-        (readPin(KBD_COL2) ? 0 : 1 << 2) |
-        (readPin(KBD_COL3) ? 0 : 1 << 3);
-    deselect_row(row);
-    return ret;
+  select_row(row);
+  wait_us(KBD_ROW_SETUP_DELAY_US);
+  const matrix_row_t ret = 
+    (readPin(KBD_COL0) ? 0 : 1 << 0) |
+    (readPin(KBD_COL1) ? 0 : 1 << 1) |
+    (readPin(KBD_COL2) ? 0 : 1 << 2) |
+    (readPin(KBD_COL3) ? 0 : 1 << 3);
+  deselect_row(row);
+  return ret;
 }
 
 static uint16_t readShiftRegister(void)
 {
-    uint16_t ret = 0;
+  uint16_t ret = 0;
 
-    writePinHigh(SNES_LATCH);
+  writePinHigh(SNES_LATCH);
 
-    for (size_t bit = 0; bit < SNES_DATA_BITS; ++bit)
-    {
-        // Wait for shift register to setup the data line
-        wait_us(SNES_DATA_SETUP_DELAY_US);
+  for (size_t bit = 0; bit < SNES_DATA_BITS; ++bit)
+  {
+    // Wait for shift register to setup the data line
+    wait_us(SNES_DATA_SETUP_DELAY_US);
 
-        // Shift accumulated data and read data pin
-        ret <<= 1;
-        ret |= readPin(SNES_D0);
-        // todo: maybe read D1 and IO here too
+    // Shift accumulated data and read data pin
+    ret <<= 1;
+    ret |= readPin(SNES_D0);
+    // todo: maybe read D1 and IO here too
 
-        // Shift next bit in
-        writePinHigh(SNES_CLOCK);
-        wait_us(SNES_CLOCK_PULSE_DURATION);
-        writePinLow(SNES_CLOCK);
-    }
-    
-    writePinLow(SNES_LATCH);
+    // Shift next bit in
+    writePinHigh(SNES_CLOCK);
+    wait_us(SNES_CLOCK_PULSE_DURATION);
+    writePinLow(SNES_CLOCK);
+  }
+  
+  writePinLow(SNES_LATCH);
 
-    return ret;
+  return ret;
 }
 
 static void readKeyboard(matrix_row_t current_matrix[])
 {
-    for (size_t row = 0; row < KBD_NUM_ROWS; ++row)
-    {
-        current_matrix[row] = read_row(row);
-    }
+  for (size_t row = 0; row < KBD_NUM_ROWS; ++row)
+  {
+    current_matrix[row] = read_row(row);
+  }
 }
 
 static void readSnesController(matrix_row_t current_matrix[])
