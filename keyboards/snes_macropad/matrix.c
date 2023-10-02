@@ -122,7 +122,7 @@ static uint16_t readShiftRegister(void)
 
     // Shift accumulated data and read data pin
     ret <<= 1;
-    ret |= readPin(SNES_D0);
+    ret |= readPin(SNES_D0) ? 0 : 1;
     // todo: maybe read D1 and IO here too
 
     // Shift next bit in
@@ -159,7 +159,7 @@ static matrix_row_t getBits(uint16_t value, size_t bit0, size_t bit1, size_t bit
 
 static void readSnesController(matrix_row_t current_matrix[])
 {
-  const uint16_t controller = (~readShiftRegister()) >> 4;
+  const uint16_t controller = readShiftRegister() >> 4;
 
   // SNES button order is pretty random, and we'd like them to be a bit tidier
   current_matrix[3] = getBits(controller, 1, 0, 8, 9);
