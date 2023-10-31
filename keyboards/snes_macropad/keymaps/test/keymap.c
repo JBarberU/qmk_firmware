@@ -1,17 +1,15 @@
-// vim: shiftwidth=2
-// Copyright 2023 QMK
+// Copyright 2023 John Barbero Unenge (@jbarberu)
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include QMK_KEYBOARD_H
 
-enum Layer
-{
-  L_Numpad = 0,
-  L_Symbols,
-  L_RGB
+enum Layer {
+    L_Numpad = 0,
+    L_Symbols,
+    L_RGB
 };
 
-
+// clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   /*
    * Macropad Button Order
@@ -34,7 +32,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    *
    */
   [L_Numpad] = LAYOUT(
-      KC_1,   KC_2,   KC_3,  KC_4 
+      KC_1,   KC_2,   KC_3,  KC_4
     , KC_5,   KC_6,   KC_7,   KC_8
     , KC_9,   KC_0,   KC_A,   KC_S
 
@@ -43,7 +41,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     , KC_X,    KC_Z,    LSFT(KC_F1),KC_TAB
   ),
   [L_RGB] = LAYOUT(
-      RGB_M_P,  RGB_M_B, RGB_TOG, KC_NO 
+      RGB_M_P,  RGB_M_B, RGB_TOG, KC_NO
     , RGB_MOD,  RGB_HUI, RGB_VAI, TO(L_Numpad)
     , RGB_RMOD, RGB_HUD, RGB_VAD, KC_NO
 
@@ -61,14 +59,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     , KC_I,    KC_J,    KC_K,    KC_L
   )
 };
+// clang-format on
 
-const char * get_layer_name_user(int layer)
-{
-  switch (layer)
-  {
-    case L_Numpad:  return "Numpad";
-    case L_RGB:     return "RGB Controls";
-    case L_Symbols: return "Symbols";
-    default:        return "Undef";
-  }
+const char * get_layer_name_user(int layer) {
+    switch (layer) {
+        case L_Numpad:
+            return "Numpad";
+        case L_RGB:
+            return "RGB Controls";
+        case L_Symbols:
+            return "Symbols";
+        default:
+            return "Undef";
+    }
 }

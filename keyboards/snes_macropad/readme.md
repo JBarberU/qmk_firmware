@@ -2,7 +2,7 @@
 
 ![snes_macropad](https://github.com/JBarberU/dotfiles/assets/1499062/f7cd0d38-fa97-4782-8115-c67dae159b4a)
 
-The SNES Macropad is, as it sounds, a macropad thas features a SNES connector. In addition it has a qwiic connector and a 3.5mm jack for 3.3V I2C (not audio), allowing additional expansion.
+The SNES Macropad is, as it sounds, a macropad that features a SNES connector. In addition it has a qwiic connector and a 3.5mm jack for 3.3V I2C (not audio), allowing additional expansion.
 
 This QMK implementation exposes the SNES controller as a part of the keyboard, meaning you can map the controller to do anything a qmk keyboard can. The layout is thus a 4x6 keyboard logically, split with the 3 first rows being on the macro pad and the 3 following being buttons on the snes controller.
 

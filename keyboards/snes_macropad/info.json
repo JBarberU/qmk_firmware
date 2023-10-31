@@ -1,6 +1,6 @@
 {
-    "manufacturer": "John Barbero Unenge",
-    "keyboard_name": "snes_macropad",
+    "manufacturer": "JBarberU's",
+    "keyboard_name": "SNES Macropad",
     "maintainer": "jbarberu",
     "bootloader": "rp2040",
     "diode_direction": "COL2ROW",

@@ -1,19 +1,17 @@
-// vim: shiftwidth=2
-// Copyright 2023 QMK
+// Copyright 2023 John Barbero Unenge (@jbarberu)
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include QMK_KEYBOARD_H
 
-enum Layer
-{
-  L_Numpad = 0,
-  L_Symbols,
-  L_EasyEDA,
-  L_RGB,
-  L_Adjust
+enum Layer {
+    L_Numpad = 0,
+    L_Symbols,
+    L_EasyEDA,
+    L_RGB,
+    L_Adjust
 };
 
-
+// clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   /*
    * Macropad Button Order
@@ -81,16 +79,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     , KC_I,    KC_J,    KC_K,    KC_L
   )
 };
+// clang-format on
 
-const char * get_layer_name_user(int layer)
-{
-  switch (layer)
-  {
-    case L_Numpad:  return "Numpad";
-    case L_EasyEDA: return "EasyEDA";
-    case L_RGB:     return "RGB Controls";
-    case L_Adjust:  return "Adjust";
-    case L_Symbols: return "Symbols";
-    default:        return "Undef";
-  }
+const char * get_layer_name_user(int layer) {
+    switch (layer) {
+        case L_Numpad:
+            return "Numpad";
+        case L_EasyEDA:
+            return "EasyEDA";
+        case L_RGB:
+            return "RGB Controls";
+        case L_Adjust:
+            return "Adjust";
+        case L_Symbols:
+            return "Symbols";
+        default:
+            return "Undef";
+    }
 }
