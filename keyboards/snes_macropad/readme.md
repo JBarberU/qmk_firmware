@@ -1,12 +1,14 @@
 # snes_macropad
 
-![snes_macropad](imgur.com image replace me!)
+![snes_macropad](https://github.com/JBarberU/dotfiles/assets/1499062/f7cd0d38-fa97-4782-8115-c67dae159b4a)
 
-*A short description of the keyboard/project*
+The SNES Macropad is, as it sounds, a macropad thas features a SNES connector. In addition it has a qwiic connector and a 3.5mm jack for 3.3V I2C (not audio), allowing additional expansion.
 
-* Keyboard Maintainer: [John Barbero Unenge](https://github.com/jbarberu)
-* Hardware Supported: *The PCBs, controllers supported*
-* Hardware Availability: *Links to where you can find this hardware*
+This QMK implementation exposes the SNES controller as a part of the keyboard, meaning you can map the controller to do anything a qmk keyboard can. The layout is thus a 4x6 keyboard logically, split with the 3 first rows being on the macro pad and the 3 following being buttons on the snes controller.
+
+* Keyboard Maintainer: [JBarberU](https://github.com/jbarberu)
+* Hardware Supported: SNES Macropad Rev 1, with a Raspberry Pi Pico Lite (AliExpress clone of Raspberry Pico with fewer grounds and all GPIO's exposed on the headers)
+* Hardware Availability: The SNES Macro pad can be found [here](https://www.tindie.com/products/jbarberu/snes-macropad/) either as a kit, partially built or fully built.
 
 Make example for this keyboard (after setting up your build environment):
 
@@ -22,6 +24,6 @@ See the [build environment setup](https://docs.qmk.fm/#/getting_started_build_to
 
 Enter the bootloader in 3 ways:
 
-* **Bootmagic reset**: Hold down the key at (0,0) in the matrix (usually the top left key or Escape) and plug in the keyboard
-* **Physical reset button**: Briefly press the button on the back of the PCB - some may have pads you must short instead
+* **Physical bootsel button**: Hold down the bootsel button on the RPi Pico while plugging in the keyboard, or while pressing the reset button
+* **Physical reset button**: Quickly double press the reset button
 * **Keycode in layout**: Press the key mapped to `QK_BOOT` if it is available

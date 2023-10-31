@@ -13,7 +13,7 @@ __attribute__((weak)) const char * get_layer_name_user(int layer)
 
 static void oled_render_layer(void)
 {
-  oled_write_P(PSTR("Layer: "), false);
+  oled_write("Layer: ", false);
   oled_write_ln(get_layer_name_user(get_highest_layer(layer_state)), false);
 }
 
@@ -23,7 +23,7 @@ bool oled_task_user(void)
 {
   oled_render_layer();
   oled_render_keylog();
-  oled_write_ln(PSTR(""), false);
+  oled_write_ln("", false);
   return false;
 }
 
@@ -69,13 +69,13 @@ static const char *depad_str(const char *depad_str, char depad_char) {
 static void oled_render_keylog(void) {
   const char *last_row_str = get_u8_str(last_row, ' ');
   oled_write(depad_str(last_row_str, ' '), false);
-  oled_write_P(PSTR("x"), false);
+  oled_write("x", false);
   const char *last_col_str = get_u8_str(last_col, ' ');
   oled_write(depad_str(last_col_str, ' '), false);
-  oled_write_P(PSTR(", k"), false);
+  oled_write(", k", false);
   const char *last_keycode_str = get_u16_str(last_keycode, ' ');
   oled_write(depad_str(last_keycode_str, ' '), false);
-  oled_write_P(PSTR(":"), false);
+  oled_write(":", false);
   oled_write_char(key_name, false);
 }
 
@@ -95,6 +95,7 @@ static void setupForFlashing(void)
   for (size_t num = 0; num < numIterations; ++num)
     oled_render();
 
+  // Set alternating backlight colors
   const uint8_t max = 20;
   rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
   for (size_t i = 0; i < RGBLED_NUM; ++i)
@@ -125,8 +126,8 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
 }
 
 void keyboard_post_init_user(void) {
-  debug_enable = true;
-  debug_matrix = true;
+//  debug_enable = true;
+//  debug_matrix = true;
   rgblight_enable_noeeprom();
   rgblight_sethsv_noeeprom(HSV_MAGENTA);
   rgblight_mode_noeeprom(RGBLIGHT_MODE_RAINBOW_SWIRL);

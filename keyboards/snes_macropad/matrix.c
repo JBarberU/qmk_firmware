@@ -22,96 +22,89 @@
 #define KBD_COL1 GP19
 #define KBD_COL2 GP20
 #define KBD_COL3 GP21
-#define KBD_ROW_SETUP_DELAY_US 1
+#define KBD_ROW_SETUP_DELAY_US 5
 
 // The real snes will clock 16 bits out of the controller, but only really has 12 bits of data
 #define SNES_DATA_BITS 16
 #define SNES_DATA_SETUP_DELAY_US 10
 #define SNES_CLOCK_PULSE_DURATION 10
 
-static inline int get_pin(size_t row)
-{
-  switch (row)
-  {
-    case 0: return KBD_ROW0;
-    case 1: return KBD_ROW1;
-    case 2: return KBD_ROW2;
-    default: return -1;
-  }
-}
-
-static void deselect_all_rows(void)
-{
-  setPinOutput(KBD_ROW0);
-  writePinHigh(KBD_ROW0);
-
-  setPinOutput(KBD_ROW1);
-  writePinHigh(KBD_ROW1);
-
-  setPinOutput(KBD_ROW2);
-  writePinHigh(KBD_ROW2);
-}
-
-static void deselect_row(size_t row)
-{
-  const int pin = get_pin(row);
-  if (pin >= 0)
-  {
-    setPinOutput(pin);
-    writePinHigh(pin);
-  }
-}
-
-static void select_row(size_t row)
-{
-  const int pin = get_pin(row);
-  if (pin >= 0)
-  {
-    setPinOutput(pin);
-    writePinLow(pin);
-  }
-}
-
-static void init_cols(void)
-{
-  setPinInputHigh(KBD_COL0);
-  setPinInputHigh(KBD_COL1);
-  setPinInputHigh(KBD_COL2);
-  setPinInputHigh(KBD_COL3);
-}
+static const int kbd_pin_map[] = { KBD_ROW0, KBD_ROW1, KBD_ROW2 };
 
 void matrix_init_custom(void)
 {
+  // init snes controller
   setPinInputHigh(SNES_D0);
   // todo: look into protocol for other strange snes controllers that use D1 and IO
   // setPinInputHigh(SNES_D1);
   // setPinInputHigh(SNES_IO);
   setPinOutput(SNES_CLOCK);
   setPinOutput(SNES_LATCH);
-
-  deselect_all_rows();
-  init_cols();
-
   writePinLow(SNES_CLOCK);
   writePinLow(SNES_LATCH);
+
+  // init rows
+  setPinOutput(KBD_ROW0);
+  setPinOutput(KBD_ROW1);
+  setPinOutput(KBD_ROW2);
+  writePinHigh(KBD_ROW0);
+  writePinHigh(KBD_ROW1);
+  writePinHigh(KBD_ROW2);
+
+  // init columns
+  setPinInputHigh(KBD_COL0);
+  setPinInputHigh(KBD_COL1);
+  setPinInputHigh(KBD_COL2);
+  setPinInputHigh(KBD_COL3);
 }
 
-static matrix_row_t read_row(size_t row)
+static matrix_row_t readRow(size_t row, int setupDelay)
 {
-  select_row(row);
-  wait_us(KBD_ROW_SETUP_DELAY_US);
+  const int pin = kbd_pin_map[row];
+
+  // select the row
+  setPinOutput(pin);
+  writePinLow(pin);
+  wait_us(setupDelay);
+
+  // read the column data
   const matrix_row_t ret = 
     (readPin(KBD_COL0) ? 0 : 1 << 0) |
     (readPin(KBD_COL1) ? 0 : 1 << 1) |
     (readPin(KBD_COL2) ? 0 : 1 << 2) |
     (readPin(KBD_COL3) ? 0 : 1 << 3);
-  deselect_row(row);
+
+  // deselect the row
+  setPinOutput(pin);
+  writePinHigh(pin);
+
   return ret;
 }
 
-static uint16_t readShiftRegister(void)
+static void readKeyboard(matrix_row_t current_matrix[])
 {
-  uint16_t ret = 0;
+  for (size_t row = 0; row < KBD_NUM_ROWS; ++row)
+  {
+    current_matrix[row] = readRow(row, KBD_ROW_SETUP_DELAY_US);
+  }
+}
+
+static matrix_row_t getBits(uint16_t value, size_t bit0, size_t bit1, size_t bit2, size_t bit3)
+{
+  matrix_row_t ret = 0;
+  ret |= (value >> bit3) & 1;
+  ret <<= 1;
+  ret |= (value >> bit2) & 1;
+  ret <<= 1;
+  ret |= (value >> bit1) & 1;
+  ret <<= 1;
+  ret |= (value >> bit0) & 1;
+  return ret;
+}
+
+static void readSnesController(matrix_row_t current_matrix[])
+{
+  uint16_t controller = 0;
 
   writePinHigh(SNES_LATCH);
 
@@ -121,8 +114,8 @@ static uint16_t readShiftRegister(void)
     wait_us(SNES_DATA_SETUP_DELAY_US);
 
     // Shift accumulated data and read data pin
-    ret <<= 1;
-    ret |= readPin(SNES_D0) ? 0 : 1;
+    controller <<= 1;
+    controller |= readPin(SNES_D0) ? 0 : 1;
     // todo: maybe read D1 and IO here too
 
     // Shift next bit in
@@ -130,36 +123,10 @@ static uint16_t readShiftRegister(void)
     wait_us(SNES_CLOCK_PULSE_DURATION);
     writePinLow(SNES_CLOCK);
   }
-  
+
   writePinLow(SNES_LATCH);
 
-  return ret;
-}
-
-static void readKeyboard(matrix_row_t current_matrix[])
-{
-  for (size_t row = 0; row < KBD_NUM_ROWS; ++row)
-  {
-    current_matrix[row] = read_row(row);
-  }
-}
-
-static matrix_row_t getBits(uint16_t value, size_t bit0, size_t bit1, size_t bit2, size_t bit3)
-{
-  matrix_row_t ret = 0;
-  ret |= (value & (1 << bit3)) >> bit3;
-  ret <<= 1;
-  ret |= (value & (1 << bit2)) >> bit2;
-  ret <<= 1;
-  ret |= (value & (1 << bit1)) >> bit1;
-  ret <<= 1;
-  ret |= (value & (1 << bit0)) >> bit0;
-  return ret;
-}
-
-static void readSnesController(matrix_row_t current_matrix[])
-{
-  const uint16_t controller = readShiftRegister() >> 4;
+  controller >>= 4;
 
   // SNES button order is pretty random, and we'd like them to be a bit tidier
   current_matrix[3] = getBits(controller, 1, 0, 8, 9);
@@ -169,10 +136,16 @@ static void readSnesController(matrix_row_t current_matrix[])
 
 bool matrix_scan_custom(matrix_row_t current_matrix[])
 {
-  matrix_row_t last_value[MATRIX_ROWS];
   const size_t MATRIX_ARRAY_SIZE = MATRIX_ROWS * sizeof(matrix_row_t);
+
+  // create a copy of the current_matrix, before we read hardware state
+  matrix_row_t last_value[MATRIX_ROWS];
   memcpy(last_value, current_matrix, MATRIX_ARRAY_SIZE);
+
+  // read keyboard and snes controller
   readKeyboard(current_matrix);
   readSnesController(current_matrix);
+
+  // check if anything changed
   return memcmp(last_value, current_matrix, MATRIX_ARRAY_SIZE) != 0;
 }
