@@ -15,9 +15,9 @@ enum {
 #define HR_D LALT_T(KC_D)
 #define HR_F LCTL_T(KC_F)
 
-#define HR_J RGUI_T(KC_J)
-#define HR_K RALT_T(KC_K)
-#define HR_L RCTL_T(KC_L)
+#define HR_J LCTL_T(KC_J)
+#define HR_K LALT_T(KC_K)
+#define HR_L LGUI_T(KC_L)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /*
@@ -36,7 +36,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,  KC_Q,   KC_W,    KC_E,    KC_R,     KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC,
         KC_ESC,  KC_A,   HR_S,    HR_D,    HR_F,     KC_G,                         KC_H,    HR_J,    HR_K,    HR_L,    KC_SCLN, KC_QUOT,
         KC_LSFT, KC_Z,   KC_X,    KC_C,    KC_V,     KC_B,                         KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-        KC_NO,   KC_NO,           KC_NO,   KC_DEL,   KC_BSPC, MO_Ra,        MO_Lo, KC_SPC,  KC_ENT,  KC_NO,            KC_NO,   KC_NO
+        KC_NO,   KC_NO,           MO_Ra,   KC_DEL,   KC_BSPC, KC_LSFT,    KC_RSFT, KC_SPC,  KC_ENT,  MO_Lo,            KC_NO,   KC_NO
     ),
     [L_Raise] = LAYOUT(
         QK_BOOT, KC_NO,  KC_NO,   KC_NO,   KC_NO,    KC_NO,                        KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_NO,
