@@ -11,6 +11,13 @@
 #define SERIAL_USART_RX_PIN GP11
 #define SERIAL_USART_TX_PIN GP12
 
+// Prototype has:
+// - LH -> GND
+// - RH -> +3V3
+#define MASTER_LEFT
+#define SPLIT_HAND_PIN GP23
+#define SPLIT_HAND_PIN_LOW_IS_LEFT
+
 /*
  * Feature disable options
  *  These options are also useful to firmware size reduction.
