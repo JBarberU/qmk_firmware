@@ -71,8 +71,10 @@ bool oled_task_kb(void) {
         return false;
     }
 
+    oled_clear();
     oled_render_layer();
     oled_render_keylog();
+    oled_render_dirty(true);
     oled_advance_page(true);
     return false;
 }

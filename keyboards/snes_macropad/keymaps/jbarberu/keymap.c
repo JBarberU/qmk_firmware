@@ -11,6 +11,81 @@ enum Layer {
     L_Adjust
 };
 
+enum CustomKeyCodes
+{
+    CC_DADT = SAFE_RANGE,
+    CC_DADN
+};
+
+static bool showJoke = false;
+static const char* currentJoke = "";
+static const char* jokes[] = {
+"What do you call an  "
+"old snowman?         "
+"Water.",
+
+"Shout out to my gran,"
+"it's the only way she"
+"can hear.",
+
+"I couldn't figure out"
+"the seat belt.       "
+"Then it just clicked.",
+
+"Geology rocks, but   "
+"Geography is where it"
+"is at!               ",
+
+"I just broke my      "
+"guitar. It's okay, I "
+"won't fret.          ",
+
+"I'm glad I know sign "
+"language, it's pretty"
+"handy.               ",
+
+"- What time is it?   "
+"- I don't know... it "
+"keeps changing.      ",
+
+"The rotation of earth"
+"really makes my day. ",
+
+"I'm reading a book on"
+"the history of glue  "
+"- can't put it down. ",
+
+"- I'm sorry.         "
+"- Hi sorry, I'm dad. ",
+
+"The US can't switch  "
+"from pounds to grams "
+"overnight. That would"
+"cause mass confusion.",
+
+"I told my friend 10  "
+"puns hoping one would"
+"crack him up. Sadly, "
+"no pun in ten did.   ",
+
+"How come the stadium "
+"got hot after the    "
+"game? Because all of "
+"the fans left.       ",
+
+"My sea sickness comes"
+"in waves.            ",
+
+"My boss told me to   "
+"have a good day. So I"
+"went home...",
+
+"Hear about the new   "
+"restaurant, Karma?   "
+"There's no menu - You"
+"get what you deserve."
+};
+
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   /*
@@ -72,7 +147,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [L_Symbols] = LAYOUT(
       KC_PPLS, KC_PMNS, KC_PEQL, KC_NO
     , KC_PAST, KC_PSLS, KC_ENT,  KC_TRNS
-    , KC_NUM,  KC_NO,   KC_NO,   QK_BOOT
+    , KC_NUM,  CC_DADT, CC_DADN, QK_BOOT
 
     , KC_A,    KC_B,    KC_C,    KC_D
     , KC_E,    KC_F,    KC_G,    KC_H
@@ -96,4 +171,30 @@ const char * get_layer_name_user(uint8_t layer) {
         default:
             return "Undef";
     }
+}
+
+bool oled_task_user(void)
+{
+    if (showJoke)
+    {
+        oled_clear();
+        oled_write(currentJoke, false);
+        oled_render_dirty(true);
+    }
+    return !showJoke;
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (record->event.pressed) {
+        switch (keycode)
+        {
+            case CC_DADT:
+                showJoke = !showJoke;
+                return false;
+            case CC_DADN:
+                currentJoke = jokes[rand() % (sizeof(jokes) / sizeof(const char*))];
+                return false;
+        }
+    }
+    return true;
 }
