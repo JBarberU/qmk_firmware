@@ -21,7 +21,7 @@
 #define KBD_COL1 GP19
 #define KBD_COL2 GP20
 #define KBD_COL3 GP21
-#define KBD_ROW_SETUP_DELAY_US 5
+#define KBD_ROW_SETUP_DELAY_US 1
 
 // The real snes will clock 16 bits out of the controller, but only really has 12 bits of data
 #define SNES_DATA_BITS 16
@@ -40,8 +40,8 @@ void matrix_init_custom(void) {
     // todo: look into protocol for other strange snes controllers that use D1 and IO
     // setPinInputHigh(SNES_D1);
     // setPinInputHigh(SNES_IO);
-    setPinOutput(SNES_CLOCK);
-    setPinOutput(SNES_LATCH);
+    palSetLineMode(SNES_CLOCK, PAL_MODE_OUTPUT_PUSHPULL | PAL_RP_PAD_SLEWFAST);
+    palSetLineMode(SNES_LATCH, PAL_MODE_OUTPUT_PUSHPULL | PAL_RP_PAD_SLEWFAST);
     writePinLow(SNES_CLOCK);
     writePinLow(SNES_LATCH);
 
@@ -64,9 +64,8 @@ static matrix_row_t readRow(size_t row, int setupDelay) {
     const int pin = kbd_pin_map[row];
 
     // select the row
-    setPinOutput(pin);
     writePinLow(pin);
-    wait_us(setupDelay);
+    waitInputPinDelay();
 
     // read the column data
     const matrix_row_t ret =
@@ -76,7 +75,6 @@ static matrix_row_t readRow(size_t row, int setupDelay) {
         | (readPin(KBD_COL3) ? 0 : 1 << 3);
 
     // deselect the row
-    setPinOutput(pin);
     writePinHigh(pin);
 
     return ret;
