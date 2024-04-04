@@ -18,6 +18,9 @@
 #define SPLIT_HAND_PIN GP23
 #define SPLIT_HAND_PIN_LOW_IS_LEFT
 
+#define SPLIT_WATCHDOG_ENABLE
+#define SPLIT_WATCHDOG_TIMEOUT 3000
+
 /*
  * Feature disable options
  *  These options are also useful to firmware size reduction.
