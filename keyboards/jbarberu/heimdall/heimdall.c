@@ -52,6 +52,10 @@ void keyboard_post_init_kb(void) {
     display_enabled = false;
     // debug_enable = true;
 
+    rgblight_enable_noeeprom();
+    rgblight_sethsv_noeeprom(HSV_MAGENTA);
+    rgblight_mode_noeeprom(RGBLIGHT_MODE_RAINBOW_SWIRL);
+
     if (true || is_keyboard_left()) {
         display_enabled = display_init_kb();
     }

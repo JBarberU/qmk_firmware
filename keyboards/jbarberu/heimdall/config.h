@@ -1,28 +1,25 @@
-// Copyright 2023 zzeneg (@zzeneg)
+// Copyright 2025 JBarberU (@jbarberu)
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #pragma once
 
+// Split Comms
 #define SERIAL_USART_FULL_DUPLEX
-// #define SERIAL_USART_PIN_SWAP
 #define SERIAL_USART_TX_PIN GP0
 #define SERIAL_USART_RX_PIN GP1
 
+// Flash by double tapping reset
 #define RP2040_BOOTLOADER_DOUBLE_TAP_RESET
 #define RP2040_BOOTLOADER_DOUBLE_TAP_RESET_TIMEOUT 500U
 
-/* any side can be master by default, enable split sync to support it */
-// #define EE_HANDS
-// #define SPLIT_POINTING_ENABLE
+// Hand detect
+#define MASTER_LEFT
+#define SPLIT_HAND_PIN GP10
 
-/* SPI config for display/touchpad */
+// Display
 #define SPI_DRIVER SPID1
 #define SPI_SCK_PIN GP14
 #define SPI_MOSI_PIN GP15
-// #define SPI_MISO_PIN GP12
-
-/* touchpad config */
-/* LCD config */
 #define LCD_DC_PIN GP12
 #define LCD_CS_PIN GP16
 #define LCD_RST_PIN GP13
