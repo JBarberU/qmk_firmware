@@ -5,21 +5,50 @@
     "bootloader": "rp2040",
     "diode_direction": "COL2ROW",
     "features": {
+        "backlight": true,
         "bootmagic": true,
         "command": false,
         "console": true,
         "extrakey": true,
         "mousekey": true,
         "nkro": true,
-        "oled": true
+        "quantum_painter": true,
+        "rgblight": true
     },
     "matrix_pins": {
-        "cols": ["GP26", "GP22", "GP20", "GP23", "GP6", "GP29"],
+        "cols": ["GP26", "GP22", "GP20", "GP3", "GP6", "GP29"],
         "rows": ["GP11", "GP28", "GP27", "GP5", "GP7"]
     },
     "processor": "RP2040",
     "split": {
-        "enabled": true
+        "enabled": true,
+        "transport": {
+            "sync": {
+                "indicators": true,
+                "modifiers": true
+            }
+        },
+        "serial": {
+            "driver": "vendor"
+        }
+    },
+    "backlight": {
+        "pin": "GP21"
+    },
+    "ws2812": {
+        "driver": "vendor",
+        "pin": "GP23"
+    },
+    "rgblight": {
+        "led_count": 56,
+        "split": true,
+        "split_count": [28, 28],
+        "max_brightness": 80,
+        "sleep": true,
+        "animations": {
+            "rainbow_swirl": true,
+            "rgb_test": true
+        }
     },
     "url": "",
     "usb": {

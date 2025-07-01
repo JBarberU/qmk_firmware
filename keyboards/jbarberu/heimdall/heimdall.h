@@ -1,9 +1,6 @@
 // Copyright 2023 John Barbero Unenge (@jbarberu)
 // SPDX-License-Identifier: GPL-2.0-or-later
 
-#pragma once
+#include <stdbool.h>
 
-#define HAL_USE_SPI TRUE
-#define HAL_USE_PWM TRUE
-
-#include_next <halconf.h>
+bool is_display_enabled(void);

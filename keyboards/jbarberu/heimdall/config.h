@@ -3,36 +3,19 @@
 
 #pragma once
 
-// #define I2C_DRIVER I2CD1
-// #define I2C1_SDA_PIN GP14
-// #define I2C1_SCL_PIN GP15
-
 #define SERIAL_USART_FULL_DUPLEX
 #define SERIAL_USART_RX_PIN GP0
 #define SERIAL_USART_TX_PIN GP1
 
-// Prototype has:
-// - LH -> GND
-// - RH -> +3V3
+#define SPI_DRIVER SPID1
+#define SPI_SCK_PIN GP14
+#define SPI_MOSI_PIN GP15
+#define LCD_DC_PIN GP12
+#define LCD_CS_PIN GP16
+#define LCD_RST_PIN GP13
+#define BACKLIGHT_PWM_DRIVER PWMD2
+#define BACKLIGHT_PWM_CHANNEL RP2040_PWM_CHANNEL_B
+#define QUANTUM_PAINTER_LVGL_USE_CUSTOM_CONF
+
 #define MASTER_LEFT
 #define SPLIT_HAND_PIN GP10
-// #define SPLIT_HAND_PIN_LOW_IS_LEFT
-
-// #define SPLIT_WATCHDOG_ENABLE
-// #define SPLIT_WATCHDOG_TIMEOUT 3000
-
-/*
- * Feature disable options
- *  These options are also useful to firmware size reduction.
- */
-
-/* disable debug print */
-//#define NO_DEBUG
-
-/* disable print */
-//#define NO_PRINT
-
-/* disable action features */
-//#define NO_ACTION_LAYER
-//#define NO_ACTION_TAPPING
-//#define NO_ACTION_ONESHOT

@@ -3,110 +3,15 @@
 
 #include "quantum.h"
 
-// oled keylog rendering has been kindly borrowed from crkbd <3
+#include "display.h"
+#include "print.h"
 
-#ifdef OLED_ENABLED
+static bool display_enabled;
 
-uint8_t  last_row;
-uint8_t  last_col;
-
-static void set_keylog(uint16_t keycode, keyrecord_t *record) {
-    last_row = record->event.key.row;
-    last_col = record->event.key.col;
-}
-
-static void oled_render_keylog(void) {
-    oled_write_char('0' + last_row, false);
-    oled_write("x", false);
-    oled_write_char('0' + last_col, false);
-}
-
-__attribute__((weak)) const char * get_layer_name_user(uint8_t layer) {
-    return get_u8_str(layer, ' ');
-}
-
-oled_rotation_t oled_init_kb(oled_rotation_t rotation) {
-    if (!is_keyboard_master()) {
-        return OLED_ROTATION_180;
-    }
-    else {
-        return OLED_ROTATION_270;
-    }
-    return rotation;
-}
-
-__attribute__((weak)) void oled_render_logo_user(void) {
-    static const char qmk_logo[] = {
-        0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F, 0x90, 0x91, 0x92, 0x93, 0x94,
-        0xA0, 0xA1, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7, 0xA8, 0xA9, 0xAA, 0xAB, 0xAC, 0xAD, 0xAE, 0xAF, 0xB0, 0xB1, 0xB2, 0xB3, 0xB4,
-        0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xCF, 0xD0, 0xD1, 0xD2, 0xD3, 0xD4, 0x00
-    };
-
-    oled_write(qmk_logo, false);
-}
-
-static void oled_render_layer(void) {
-    oled_write_ln("Layer", false);
-    const char* layer_name = get_layer_name_user(get_highest_layer(layer_state));
-    if (strlen(layer_name) % 5 == 0) {
-        oled_write(layer_name, false);
-    }
-    else {
-        oled_write_ln(layer_name, false);
-    }
-}
-
-void oled_newlines(int num_lines) {
-    for (unsigned int i = 0; i < num_lines; ++i)
-    {
-        oled_advance_page(true);
-    }
-}
-
-bool oled_task_kb(void) {
-    if (!oled_task_user()) {
-        return false;
-    }
-
-    if (is_keyboard_master())
-    {
-        oled_render_keylog();
-        oled_newlines(5);
-        oled_render_layer();
-    }
-    else
-    {
-        oled_render_logo_user();
-    }
-    return false;
-}
-#endif
-
+#if DO_FLASHING_SETUP
 static void setupForFlashing(void) {
-#if OLED_ENABLED
-    oled_clear();
-    oled_write("     ", false);
-    oled_write("     ", false);
-    oled_write("     ", false);
-    oled_write("*****", false);
-    oled_write("     ", false);
-    oled_write("Flash", false);
-    oled_write("     ", false);
-    oled_write("Mode ", false);
-    oled_write("     ", false);
-    oled_write("*****", false);
-    oled_write("     ", false);
-    oled_write("     ", false);
-    oled_write("     ", false);
-    oled_write("     ", false);
-    oled_write("     ", false);
-    oled_write("     ", false);
-
-    // Force data to be rendered
-    oled_render_dirty(true);
-#endif
-
 #ifdef RGB_ENABLED
+    print("Started flashing!\n");
     // Set alternating backlight colors
     const uint8_t max = 20;
     rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
@@ -124,15 +29,103 @@ static void setupForFlashing(void) {
     rgblight_set();
 #endif
 }
+#endif
+
+static painter_device_t painter;
+
+void keyboard_post_init_kb() {
+    debug_enable = true;
+    rgblight_enable_noeeprom();
+    rgblight_sethsv_noeeprom(HSV_MAGENTA);
+    rgblight_mode_noeeprom(RGBLIGHT_MODE_RAINBOW_SWIRL);
+    backlight_enable();
+    
+    display_enabled = false;
+
+#ifdef STRONTY_STUFF
+    print("Turned backlight on\n");
+    if (true || is_keyboard_left()) {
+        rgblight_sethsv_noeeprom(HSV_RED);
+        display_enabled = display_init_kb();
+        if (!display_enabled) {
+            rgblight_sethsv_noeeprom(HSV_BLUE);
+            print("Failed to initialize display\n");
+            // log error
+        } else {
+            rgblight_sethsv_noeeprom(HSV_GREEN);
+            print("Initialized display\n");
+        }
+    }
+#endif
+
+    uprintf("Is master: %s\n", is_keyboard_left() ?
+            "yes" : "no");
+
+    const uint16_t SPI_DIVISOR = 32;
+    const uint16_t SPI_MODE = 3;
+    painter = qp_st7789_make_spi_device(240, 240, 16, 12, 13, SPI_DIVISOR, SPI_MODE);
+    qp_set_viewport_offsets(painter, 0, 20);
+    qp_init(painter, QP_ROTATION_0);   // Initialise the display
+    qp_power(painter, true);
+    qp_clear(painter);
+    uprintf("Got painter: %d\n", (int)painter);
+
+    keyboard_post_init_user();
+}
+
+void housekeeping_task_kb(void) {
+    static uint32_t last_draw = 0;
+    if (timer_elapsed32(last_draw) > 33) { // Throttle to 30fps
+        last_draw = timer_read32();
+        uint16_t left = 0;
+        uint16_t top = 7;
+        uint16_t right = 239;
+        uint16_t bottom = 200;
+        bool filled = true;
+        qp_rect(painter, left, top, right, bottom, HSV_RED, filled);
+        
+        qp_flush(painter);
+        print("Redrawing painter\n");
+    }
+#ifdef STRONTY_STUFF
+    static int counter = 0;
+    print("housekeeping_task_kb");
+    if (display_enabled) {
+        display_housekeeping_task();
+
+        if (counter % 1000 == 0) {
+            print("display_enabled -> display_housekeeping_task()\n");
+        }
+    } else {
+        if (counter % 1000 == 0) {
+            print("display_disabled !-> display_housekeeping_task()\n");
+        }
+    }
+
+    counter++;
+#endif
+}
+
+#ifdef STRONTY_STUFF
+bool is_display_enabled(void) {
+    return display_enabled;
+}
+#endif
 
 bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) {
+        uprintf("Got key event: (%d, %d)\n", record->event.key.row , record->event.key.col);
+
 #ifdef OLED_ENABLED
         set_keylog(keycode, record);
 #endif
     }
+
+#if DO_FLASHING_SETUP
     if (keycode == QK_BOOT) {
         setupForFlashing();
     }
-    return process_record_user(keycode, record);
+#endif
+
+    return false; //process_record_user(keycode, record);
 }
