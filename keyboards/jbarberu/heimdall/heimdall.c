@@ -6,8 +6,9 @@
 #include "display.h"
 #include "print.h"
 
-static bool display_enabled;
+#define STRONTY_STUFF 1
 
+static bool display_enabled;
 #if DO_FLASHING_SETUP
 static void setupForFlashing(void) {
 #ifdef RGB_ENABLED
@@ -31,10 +32,13 @@ static void setupForFlashing(void) {
 }
 #endif
 
+#ifndef STRONTY_STUFF
 static painter_device_t painter;
+#endif
 
 void keyboard_post_init_kb() {
     debug_enable = true;
+
     rgblight_enable_noeeprom();
     rgblight_sethsv_noeeprom(HSV_MAGENTA);
     rgblight_mode_noeeprom(RGBLIGHT_MODE_RAINBOW_SWIRL);
@@ -56,37 +60,29 @@ void keyboard_post_init_kb() {
             print("Initialized display\n");
         }
     }
-#endif
+
+#else
 
     uprintf("Is master: %s\n", is_keyboard_left() ?
             "yes" : "no");
 
-    const uint16_t SPI_DIVISOR = 32;
+    const uint16_t SPI_DIVISOR = 16;
     const uint16_t SPI_MODE = 3;
-    painter = qp_st7789_make_spi_device(240, 240, 16, 12, 13, SPI_DIVISOR, SPI_MODE);
+    const pin_t spi_cs = 16;
+    const pin_t spi_dc = 12;
+    const pin_t spi_rst = 13;
+    painter = qp_st7789_make_spi_device(240, 240, spi_cs, spi_dc, spi_rst, SPI_DIVISOR, SPI_MODE);
     qp_set_viewport_offsets(painter, 0, 20);
     qp_init(painter, QP_ROTATION_0);   // Initialise the display
     qp_power(painter, true);
     qp_clear(painter);
     uprintf("Got painter: %d\n", (int)painter);
+#endif
 
     keyboard_post_init_user();
 }
 
 void housekeeping_task_kb(void) {
-    static uint32_t last_draw = 0;
-    if (timer_elapsed32(last_draw) > 33) { // Throttle to 30fps
-        last_draw = timer_read32();
-        uint16_t left = 0;
-        uint16_t top = 7;
-        uint16_t right = 239;
-        uint16_t bottom = 200;
-        bool filled = true;
-        qp_rect(painter, left, top, right, bottom, HSV_RED, filled);
-        
-        qp_flush(painter);
-        print("Redrawing painter\n");
-    }
 #ifdef STRONTY_STUFF
     static int counter = 0;
     print("housekeeping_task_kb");
@@ -101,8 +97,22 @@ void housekeeping_task_kb(void) {
             print("display_disabled !-> display_housekeeping_task()\n");
         }
     }
-
     counter++;
+#else
+    static uint32_t last_draw = 0;
+    if (timer_elapsed32(last_draw) > 33) { // Throttle to 30fps
+        last_draw = timer_read32();
+        uint16_t left = 0;
+        uint16_t top = 7;
+        uint16_t right = 239;
+        uint16_t bottom = 200;
+        bool filled = true;
+        qp_rect(painter, left, top, right, bottom, HSV_RED, filled);
+        
+        qp_flush(painter);
+        print("Redrawing painter\n");
+    }
+
 #endif
 }
 
