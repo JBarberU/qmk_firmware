@@ -35,33 +35,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * └───┴───┴───┴───┘
      */
     [L_Base] = LAYOUT(
-        KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,
-        KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,
-        KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,
-        KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,
-        QK_BOOT,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO
+        KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,        KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,
+        KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,        KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,
+        KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,        KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,
+        KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,        KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,
+        QK_BOOT,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,        KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO
     ),
-    [L_Raise] = LAYOUT(
-        QK_BOOT, KC_NO,   KC_NO,   KC_NO,   JB_CLW,   KC_NO,
-        KC_NO,   KC_HOME, KC_PGUP, KC_PGDN, KC_END,   KC_EXLM,
-        KC_NO,   KC_LEFT, KC_UP,   KC_DOWN, KC_RIGHT, KC_DLR,
-        KC_NO,   KC_NO,   KC_NO,   KC_PERC, KC_HASH,  KC_AT,
-        KC_NO,   KC_NO,            KC_NO,   KC_TRNS,  KC_TRNS, KC_TRNS
-    ),
-    [L_Lower] = LAYOUT(
-        KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO,
-        KC_NO,   KC_1,    KC_2,    KC_3,    KC_4,     KC_5,
-        KC_NO,   KC_6,    KC_7,    KC_8,    KC_9,     KC_0,
-        KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO,
-        KC_NO,   KC_NO,            KC_NO,   KC_TRNS,  KC_TRNS, KC_TRNS
-    ),
-    [L_Gaming] = LAYOUT(
-        KC_NO,   KC_1,   KC_2,    KC_3,    KC_4,     KC_5,
-        KC_TAB,  KC_NO,  KC_NO,   KC_COMM, KC_D,     KC_NO,
-        KC_ESC,  KC_NO,  KC_A,    KC_SCLN, KC_H,     KC_NO,
-        KC_NO,   KC_NO,  KC_NO,   KC_NO,   KC_I,     KC_V,
-        KC_NO,   KC_NO,           KC_NO,   KC_NO,    KC_NO,   KC_NO
-    )
     /* Blank layer
     [<< layer name >>] = LAYOUT(
         KC_NO,   KC_NO,  KC_NO,   KC_NO,   KC_NO,    KC_NO,                        KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
