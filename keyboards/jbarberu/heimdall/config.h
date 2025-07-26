@@ -26,3 +26,8 @@
 #define BACKLIGHT_PWM_DRIVER PWMD2
 #define BACKLIGHT_PWM_CHANNEL RP2040_PWM_CHANNEL_B
 #define QUANTUM_PAINTER_LVGL_USE_CUSTOM_CONF
+
+// Misc
+// Assign MISO to an unused pin, since the default is GP20, which we use
+// for column 2.
+#define SPI_MISO_PIN GP25

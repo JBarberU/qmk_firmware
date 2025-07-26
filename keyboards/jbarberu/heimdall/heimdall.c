@@ -49,8 +49,9 @@ void housekeeping_task_kb(void) {
 }
 
 void keyboard_post_init_kb(void) {
+     debug_enable = true;
+
     display_enabled = false;
-    // debug_enable = true;
 
     rgblight_enable_noeeprom();
     rgblight_sethsv_noeeprom(HSV_MAGENTA);

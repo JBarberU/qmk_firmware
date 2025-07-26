@@ -17,7 +17,7 @@
         "rgblight": true
     },
     "matrix_pins": {
-        "cols": ["GP26", "GP22", "GP20", "GP3", "GP6", "GP29"],
+        "cols": ["GP26", "GP22", "GP20", "GP23", "GP6", "GP29"],
         "rows": ["GP11", "GP28", "GP27", "GP5", "GP7"]
     },
     "processor": "RP2040",
@@ -26,7 +26,7 @@
     },
     "ws2812": {
         "driver": "vendor",
-        "pin": "GP3"
+        "pin": "GP2"
     },
     "rgblight": {
         "led_count": 28,
@@ -41,7 +41,7 @@
         "rotary": [
             {
                 "pin_a": "GP8",
-                "pin_b": "GP7"
+                "pin_b": "GP9"
             }
         ]
     },
