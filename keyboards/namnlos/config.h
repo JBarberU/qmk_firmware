@@ -21,6 +21,10 @@
 #define SPLIT_WATCHDOG_ENABLE
 #define SPLIT_WATCHDOG_TIMEOUT 3000
 
+// Slightly extended tapping term
+// for homerow mods
+#define TAPPING_TERM 250
+
 /*
  * Feature disable options
  *  These options are also useful to firmware size reduction.
